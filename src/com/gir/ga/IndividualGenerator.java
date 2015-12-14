@@ -1,32 +1,62 @@
 package com.gir.ga;
 
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 /**
  * Created by Vlad on 12-Dec-15.
  */
 public class IndividualGenerator {
 
     public Individual generateRandomIndividual(GAParameters parameters) {
-        byte[] dna = new byte[parameters.getDnaLength()];
+        List<Gene> dna= new ArrayList<Gene>();
         for (int i=0; i<parameters.getDnaLength(); i++) {
-            if (Math.random() > 0.5) {
-                dna[i] = 1;
-            } else {
-                dna[i] = 0;
-            }
+            dna.add(generateRandomGene(parameters));
         }
         return new Individual(dna);
     }
 
     public Individual generateIndividualThroughCrossover(Match match, GAParameters parameters) {
-        byte[] newDna = new byte[parameters.getDnaLength()];
-        for (int i = 0; i < parameters.getDnaLength(); i++) {
+        int firstDnaSize = match.getFirstIndividual().getDna().size();
+        int secondDnaSize = match.getSecondIndividual().getDna().size();
+        int maxDna = firstDnaSize;
+        if (secondDnaSize > maxDna) {
+            maxDna = secondDnaSize;
+        }
+        List<Gene> newDna = new ArrayList<Gene>();
+        for (int i = 0; i < maxDna; i++) {
             if (Math.random() <= 0.5) {
-                newDna[i] = match.getFirstIndividual().getGene(i);
+                if (firstDnaSize > i) {
+                    newDna.add(match.getFirstIndividual().getGene(i).clone());
+                }
             } else {
-                newDna[i] = match.getSecondIndividual().getGene(i);
+                if (secondDnaSize > i) {
+                    newDna.add(match.getSecondIndividual().getGene(i).clone());
+                }
             }
         }
         return new Individual(newDna);
+    }
+
+    public Gene generateRandomGene(GAParameters parameters) {
+        Random random = new Random();
+        Color color = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256), random.nextInt(256));
+        int geneSize = random.nextInt(parameters.getMaxGeneSize()/4);
+        List<Point> points = new ArrayList<Point>();
+        for (int i=0; i<geneSize; i++) {
+            points.add(generateRandomPoint(parameters));
+        }
+        return new Gene(points, color);
+    }
+
+    public Point generateRandomPoint(GAParameters parameters) {
+        Random random = new Random();
+        int x = random.nextInt(parameters.getTargetImage().getWidth());
+        int y = random.nextInt(parameters.getTargetImage().getHeight());
+        return new Point(x, y);
     }
 
 }

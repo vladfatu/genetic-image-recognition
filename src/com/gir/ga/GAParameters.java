@@ -1,14 +1,21 @@
 package com.gir.ga;
 
+import java.awt.image.BufferedImage;
+
 /**
  * Created by Vlad on 12-Dec-15.
  */
 public class GAParameters {
 
     private int dnaLength;
+    private int maxGeneSize;
     private int populationSize;
     private boolean elitism;
     private int matchSampleSize;
+    private BufferedImage targetImage;
+    private double mutationRatio;
+    private double maxMutation;
+    private long maxSumSquaredError;
 
     public int getDnaLength() {
         return dnaLength;
@@ -40,5 +47,45 @@ public class GAParameters {
 
     public void setMatchSampleSize(int matchSampleSize) {
         this.matchSampleSize = matchSampleSize;
+    }
+
+    public BufferedImage getTargetImage() {
+        return targetImage;
+    }
+
+    public void setTargetImage(BufferedImage targetImage) {
+        this.targetImage = targetImage;
+    }
+
+    public double getMutationRatio() {
+        return mutationRatio;
+    }
+
+    public void setMutationRatio(double mutationRatio) {
+        this.mutationRatio = mutationRatio;
+    }
+
+    public long getMaxSumSquaredError() {
+        return maxSumSquaredError;
+    }
+
+    public void setMaxSumSquaredError(long maxSumSquaredError) {
+        this.maxSumSquaredError = maxSumSquaredError;
+    }
+
+    public int getMaxMutation(int maxValue) {
+        return (int) (maxValue * maxMutation);
+    }
+
+    public void setMaxMutation(double maxMutation) {
+        this.maxMutation = maxMutation;
+    }
+
+    public int getMaxGeneSize() {
+        return maxGeneSize;
+    }
+
+    public void setMaxGeneSize(int maxGeneSize) {
+        this.maxGeneSize = maxGeneSize;
     }
 }

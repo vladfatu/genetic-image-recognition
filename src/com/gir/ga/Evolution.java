@@ -12,23 +12,42 @@ public class Evolution {
         List<Individual> nextGeneration = new ArrayList<Individual>();
         performElitistStep(previousGeneration, nextGeneration, parameters);
         performCrossoverStep(previousGeneration, nextGeneration, parameters);
+        performMutationStep(nextGeneration, parameters);
         return nextGeneration;
     }
 
     private void performElitistStep(Generation previousGeneration, List<Individual> nextGeneration, GAParameters parameters) {
-        nextGeneration.add(previousGeneration.getFittestIndividual());
+        if (parameters.isElitism()) {
+            Individual fittestIndividual = previousGeneration.getFittestIndividual(parameters);
+            nextGeneration.add(fittestIndividual);
+            if (parameters.getPopulationSize() == 2) {
+                nextGeneration.add(fittestIndividual.clone());
+            }
+        }
     }
 
     private void performCrossoverStep(Generation previousGeneration, List<Individual> nextGeneration, GAParameters parameters) {
-        Matchmaker matchmaker = new Matchmaker();
-        IndividualGenerator generator = new IndividualGenerator();
-        int matchCount = parameters.getPopulationSize();
-        if (parameters.isElitism()) {
-            matchCount--;
+        if (parameters.getPopulationSize() > 2) {
+            Matchmaker matchmaker = new Matchmaker();
+            IndividualGenerator generator = new IndividualGenerator();
+            int matchCount = parameters.getPopulationSize();
+            if (parameters.isElitism()) {
+                matchCount--;
+            }
+            for (int i = 0; i < matchCount; i++) {
+                Match match = matchmaker.getMatch(previousGeneration, parameters);
+                nextGeneration.add(generator.generateIndividualThroughCrossover(match, parameters));
+            }
         }
-        for (int i=0; i<matchCount; i++) {
-            Match match = matchmaker.getMatch(previousGeneration, parameters);
-            nextGeneration.add(generator.generateIndividualThroughCrossover(match, parameters));
+    }
+
+    private void performMutationStep(List<Individual> nextGeneration, GAParameters parameters) {
+        int offset = 0;
+        if (parameters.isElitism()) {
+            offset = 1;
+        }
+        for (int i=offset; i<parameters.getPopulationSize(); i++) {
+            nextGeneration.get(i).mutate(parameters);
         }
     }
 

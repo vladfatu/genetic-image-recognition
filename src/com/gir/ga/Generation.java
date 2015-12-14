@@ -27,14 +27,14 @@ public class Generation {
         this.population = evolution.generateNextGeneration(previousGeneration, parameters);
     }
 
-    public Individual getFittestIndividual() {
+    public Individual getFittestIndividual(GAParameters parameters) {
         FitnessCalculator fitnessCalculator = new FitnessCalculator();
-        double maxFitness = -1;
+        long minError = parameters.getMaxSumSquaredError();
         Individual fittestIndividual = null;
         for (Individual individual : population) {
-            double fitness = fitnessCalculator.getFitness(individual);
-            if (fitness > maxFitness) {
-                maxFitness = fitness;
+            long error = fitnessCalculator.getFitness(individual, parameters);
+            if (error < minError) {
+                minError = error;
                 fittestIndividual = individual;
             }
         }

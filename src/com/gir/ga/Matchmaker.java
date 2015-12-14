@@ -23,7 +23,7 @@ public class Matchmaker {
             sample.add(population.get(randomIndex));
         }
         Generation sampleGeneration = new Generation(sample);
-        return sampleGeneration.getFittestIndividual();
+        return sampleGeneration.getFittestIndividual(parameters);
     }
 
 }
