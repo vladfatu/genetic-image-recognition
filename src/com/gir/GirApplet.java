@@ -41,23 +41,26 @@ public class GirApplet extends JApplet {
         Generation generation = new Generation(parameters);
         int count = 0;
         Individual fittestIndividual = generation.getFittestIndividual(parameters);
-        long fitness = fitnessCalculator.getFitness(fittestIndividual, parameters);
-        printGeneration(generation, count, fittestIndividual, fitness);
-        while (fitnessCalculator.getFitness(generation.getFittestIndividual(parameters), parameters) > 0 && count < 50000) {
+        long fitness = fittestIndividual.getFitness(parameters);
+        printGeneration(generation, count, fittestIndividual, fitness, 0);
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 5000) {
+            long timestamp = System.currentTimeMillis();
             fittestIndividual = generation.getFittestIndividual(parameters);
-            fitness = fitnessCalculator.getFitness(fittestIndividual, parameters);
+            System.out.println("intermediate " + (System.currentTimeMillis() - timestamp));
+            fitness = fittestIndividual.getFitness(parameters);
             generation = new Generation(generation, parameters);
             count++;
-            printGeneration(generation, count, fittestIndividual, fitness);
+            printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
             g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
         }
 
     }
 
-    private void printGeneration(Generation generation, int count, Individual fittestIndividual, long fitness) {
+    private void printGeneration(Generation generation, int count, Individual fittestIndividual, long fitness, long timeSpent) {
         System.out.println("Generation " + count + " : ");
         System.out.println("Fittest Individual : " + fittestIndividual);
         System.out.println("Fitness : " + fitness);
+        System.out.println("Took: " + timeSpent + " millis");
         System.out.println();
     }
 

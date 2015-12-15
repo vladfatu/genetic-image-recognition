@@ -37,8 +37,8 @@ public class FitnessCalculator {
 
     public long getFitness(Individual individual, GAParameters parameters) {
         long sumSquaredError = 0;
-        BufferedImage targetImage = parameters.getTargetImage();
-        BufferedImage individualImage = individual.getImage(parameters);
+        BufferedImage targetImage = getScaledImage(parameters.getTargetImage(), 10);
+        BufferedImage individualImage = getScaledImage(individual.getImage(parameters), 10);
         for (int i=0; i< targetImage.getWidth(); i++) {
             for (int j = 0; j < targetImage.getHeight(); j++) {
                 Color targetColor = new Color(targetImage.getRGB(i, j));
@@ -56,6 +56,27 @@ public class FitnessCalculator {
     public long getMaxSumSquaredError(BufferedImage image) {
         long maxDifferencePerPixel = 255 * 255 * 3;
         return maxDifferencePerPixel * image.getHeight() * image.getWidth();
+    }
+
+    private static BufferedImage getScaledImage(BufferedImage initialImage, int ratio) {
+//        int width = initialImage.getWidth() / ratio;
+//        int height = initialImage.getHeight() / ratio;
+//        Image tmp = initialImage.getScaledInstance(width, height, BufferedImage.SCALE_FAST);
+//        BufferedImage scaledImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//        scaledImage.getGraphics().drawImage(tmp, 0, 0, null);
+//        return scaledImage;
+
+
+        int newWidth = new Double(initialImage.getWidth() / ratio).intValue();
+        int newHeight = new Double(initialImage.getHeight() / ratio).intValue();
+        BufferedImage resized = new BufferedImage(newWidth, newHeight, initialImage.getType());
+        Graphics2D g = resized.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(initialImage, 0, 0, newWidth, newHeight, 0, 0, initialImage.getWidth(),
+                initialImage.getHeight(), null);
+        g.dispose();
+        return resized;
     }
 
 }

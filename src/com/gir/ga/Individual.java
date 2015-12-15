@@ -14,9 +14,11 @@ public class Individual implements MutateableEntity {
     private List<Gene> dna;
     private BufferedImage image;
     private boolean changed;
+    private long fitness;
 
     public Individual(List<Gene> dna) {
         this.dna = dna;
+        fitness = -1;
     }
 
     @Override
@@ -62,6 +64,14 @@ public class Individual implements MutateableEntity {
     public void setGene(int index, Gene gene) {
         dna.set(index, gene);
         changed = true;
+    }
+
+    public long getFitness(GAParameters parameters) {
+        if (fitness == -1 || changed) {
+            FitnessCalculator fitnessCalculator = new FitnessCalculator();
+            fitness = fitnessCalculator.getFitness(this, parameters);
+        }
+        return fitness;
     }
 
     public List<Gene> getDna() {

@@ -28,11 +28,10 @@ public class Generation {
     }
 
     public Individual getFittestIndividual(GAParameters parameters) {
-        FitnessCalculator fitnessCalculator = new FitnessCalculator();
         long minError = parameters.getMaxSumSquaredError();
         Individual fittestIndividual = null;
         for (Individual individual : population) {
-            long error = fitnessCalculator.getFitness(individual, parameters);
+            long error = individual.getFitness(parameters);
             if (error < minError) {
                 minError = error;
                 fittestIndividual = individual;
