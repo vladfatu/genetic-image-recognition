@@ -34,8 +34,8 @@ public class Evolution {
             if (parameters.isElitism()) {
                 matchCount--;
             }
-            for (int i = 0; i < matchCount; i++) {
-                Match match = matchmaker.getMatch(previousGeneration, parameters);
+            List<Match> matches = matchmaker.getMatches(previousGeneration, parameters, matchCount);
+            for (Match match : matches) {
                 nextGeneration.add(generator.generateIndividualThroughCrossover(match, parameters));
             }
         }

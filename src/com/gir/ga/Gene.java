@@ -30,6 +30,13 @@ public class Gene implements MutateableEntity{
         return new Gene(new ArrayList<Point>(points), color);
     }
 
+    public void scale(double ratio) {
+        List<Point> newPoints = new ArrayList<>();
+        for (Point point : points) {
+            newPoints.add(new Point((int)(point.getX() * ratio), (int)(point.getY() * ratio)));
+        }
+    }
+
     private void performPointCountMutation(GAParameters parameters) {
         Random random = new Random();
         IndividualGenerator generator = new IndividualGenerator();

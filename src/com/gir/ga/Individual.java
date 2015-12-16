@@ -13,6 +13,7 @@ public class Individual implements MutateableEntity {
 
     private List<Gene> dna;
     private BufferedImage image;
+    private BufferedImage scaledImage;
     private boolean changed;
     private long fitness;
 
@@ -44,17 +45,34 @@ public class Individual implements MutateableEntity {
         if (random.nextDouble() <= parameters.getMutationRatio()) {
             dna.add(generator.generateRandomGene(parameters));
         }
+        if (random.nextDouble() <= parameters.getMutationRatio()) {
+            dna.add(dna.get(random.nextInt(dna.size())).clone());
+        }
         if (dna.size() > 1 && random.nextDouble() <= parameters.getMutationRatio()) {
             dna.remove(random.nextInt(dna.size()));
         }
     }
 
-    public BufferedImage getImage(GAParameters parameters, int multiplier) {
-        if (image == null || changed || multiplier != 1) {
+    public BufferedImage getImage(GAParameters parameters) {
+        if (image == null || changed) {
             Renderer renderer = new Renderer();
-            image = renderer.generateImageFromDna(dna, parameters, multiplier);
+            image = renderer.generateImageFromDna(dna, parameters, 1);
         }
         return image;
+    }
+
+    public BufferedImage getScaledImage(GAParameters parameters) {
+        if (scaledImage == null || changed) {
+            Renderer renderer = new Renderer();
+            scaledImage = renderer.generateImageFromDna(dna, parameters, parameters.getCurrentImageScale());
+        }
+        return scaledImage;
+    }
+
+    public void scale(double ratio) {
+        for (Gene gene : dna) {
+            gene.scale(ratio);
+        }
     }
 
     public Individual clone() {

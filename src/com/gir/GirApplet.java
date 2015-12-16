@@ -26,7 +26,7 @@ public class GirApplet extends JApplet {
         long initialTimestamp = System.currentTimeMillis();
 
         GAParameters parameters = new GAParameters();
-        parameters.setDnaLength(30);
+        parameters.setDnaLength(2);
         parameters.setMaxGeneSize(20);
         parameters.setElitism(true);
         parameters.setPopulationSize(2);
@@ -37,27 +37,105 @@ public class GirApplet extends JApplet {
 
         FitnessCalculator fitnessCalculator = new FitnessCalculator();
         parameters.setMaxSumSquaredError(fitnessCalculator.getMaxSumSquaredError(parameters.getTargetImage()));
-        parameters.setScaledTargetImage(fitnessCalculator.getScaledImage(parameters.getTargetImage(), 10));
 
         g.drawImage(parameters.getTargetImage(), 0, 0, null);
 
-        Generation generation = new Generation(parameters);
-        int count = 0;
-        Individual fittestIndividual = generation.getFittestIndividual(parameters);
-        long fitness = fittestIndividual.getFitness(parameters);
+        Generation generation;
+        Individual fittestIndividual;
+        int count;
+        long fitness;
+
+        parameters.setCurrentImageScale(0.1);
+        parameters.setScaledTargetImage(fitnessCalculator.getScaledImage(parameters.getTargetImage(), parameters.getCurrentImageScale()));
+
+        generation = new Generation(parameters);
+        count = 0;
+        fittestIndividual = generation.getFittestIndividual(parameters);
+        fitness = fittestIndividual.getFitness(parameters);
         printGeneration(generation, count, fittestIndividual, fitness, 0);
-        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 1000) {
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 10000) {
             long timestamp = System.currentTimeMillis();
             fittestIndividual = generation.getFittestIndividual(parameters);
-            System.out.println("intermediate " + (System.currentTimeMillis() - timestamp));
             fitness = fittestIndividual.getFitness(parameters);
             generation = new Generation(generation, parameters);
             count++;
             printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
-            g.drawImage(fittestIndividual.getImage(parameters, 1), 300, 0, null);
+            if (count % 500 == 0) {
+                g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
+            }
         }
-        g.drawImage(fittestIndividual.getImage(parameters, 10), 300, 0, null);
-        g.drawImage(fitnessCalculator.getScaledImage(fittestIndividual.getImage(parameters, 1), 0.1), 300, 300, null);
+
+        parameters.setCurrentImageScale(0.25);
+        parameters.setScaledTargetImage(fitnessCalculator.getScaledImage(parameters.getTargetImage(), parameters.getCurrentImageScale()));
+
+        generation.scale(2.5);
+        generation = new Generation(generation, parameters);
+//        generation = new Generation(parameters);
+
+        count = 0;
+        fittestIndividual = generation.getFittestIndividual(parameters);
+        fitness = fittestIndividual.getFitness(parameters);
+        printGeneration(generation, count, fittestIndividual, fitness, 0);
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 2000) {
+            long timestamp = System.currentTimeMillis();
+            fittestIndividual = generation.getFittestIndividual(parameters);
+            fitness = fittestIndividual.getFitness(parameters);
+            generation = new Generation(generation, parameters);
+            count++;
+            printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
+            if (count % 500 == 0) {
+                g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
+            }
+        }
+
+        parameters.setCurrentImageScale(0.5);
+        parameters.setScaledTargetImage(fitnessCalculator.getScaledImage(parameters.getTargetImage(), parameters.getCurrentImageScale()));
+
+        generation.scale(2);
+        generation = new Generation(generation, parameters);
+//        generation = new Generation(parameters);
+
+        count = 0;
+        fittestIndividual = generation.getFittestIndividual(parameters);
+        fitness = fittestIndividual.getFitness(parameters);
+        printGeneration(generation, count, fittestIndividual, fitness, 0);
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 2000) {
+            long timestamp = System.currentTimeMillis();
+            fittestIndividual = generation.getFittestIndividual(parameters);
+            fitness = fittestIndividual.getFitness(parameters);
+            generation = new Generation(generation, parameters);
+            count++;
+            printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
+            if (count % 500 == 0) {
+                g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
+            }
+        }
+
+        parameters.setCurrentImageScale(1);
+        parameters.setScaledTargetImage(parameters.getTargetImage());
+
+        generation.scale(2);
+        generation = new Generation(generation, parameters);
+//        generation = new Generation(parameters);
+
+        count = 0;
+        fittestIndividual = generation.getFittestIndividual(parameters);
+        fitness = fittestIndividual.getFitness(parameters);
+        printGeneration(generation, count, fittestIndividual, fitness, 0);
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 50000) {
+            long timestamp = System.currentTimeMillis();
+            fittestIndividual = generation.getFittestIndividual(parameters);
+            fitness = fittestIndividual.getFitness(parameters);
+            generation = new Generation(generation, parameters);
+            count++;
+            printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
+            if (count % 500 == 0) {
+                g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
+            }
+        }
+
+//        g.drawImage(fittestIndividual.getImage(parameters, 10), 300, 0, null);
+//        g.drawImage(fitnessCalculator.getScaledImage(fittestIndividual.getImage(parameters, 1), 0.1), 300, 300, null);
         System.out.println();
         System.out.println();
         System.out.println("Final time : " + (System.currentTimeMillis() - initialTimestamp));
@@ -72,7 +150,7 @@ public class GirApplet extends JApplet {
     }
 
     private BufferedImage loadImage() {
-        URL imageURL = this.getClass().getClassLoader().getResource("ml_scaled.png");
+        URL imageURL = this.getClass().getClassLoader().getResource("ml.png");
         BufferedImage image = null;
         try {
             image = ImageIO.read(imageURL);

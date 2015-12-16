@@ -30,11 +30,15 @@ public class IndividualGenerator {
         for (int i = 0; i < maxDna; i++) {
             if (Math.random() <= 0.5) {
                 if (firstDnaSize > i) {
-                    newDna.add(match.getFirstIndividual().getGene(i).clone());
+                    Gene gene = match.getFirstIndividual().getGene(i).clone();
+                    gene.mutate(parameters);
+                    newDna.add(gene);
                 }
             } else {
                 if (secondDnaSize > i) {
-                    newDna.add(match.getSecondIndividual().getGene(i).clone());
+                    Gene gene = match.getSecondIndividual().getGene(i).clone();
+                    gene.mutate(parameters);
+                    newDna.add(gene);
                 }
             }
         }

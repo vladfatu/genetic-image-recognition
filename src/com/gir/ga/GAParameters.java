@@ -17,6 +17,7 @@ public class GAParameters {
     private double mutationRatio;
     private double maxMutation;
     private long maxSumSquaredError;
+    private double currentImageScale;
 
     public int getDnaLength() {
         return dnaLength;
@@ -96,5 +97,13 @@ public class GAParameters {
 
     public void setScaledTargetImage(BufferedImage scaledTargetImage) {
         this.scaledTargetImage = scaledTargetImage;
+    }
+
+    public double getCurrentImageScale() {
+        return currentImageScale;
+    }
+
+    public void setCurrentImageScale(double currentImageScale) {
+        this.currentImageScale = currentImageScale;
     }
 }

@@ -36,9 +36,10 @@ public class FitnessCalculator {
 //    }
 
     public long getFitness(Individual individual, GAParameters parameters) {
+//        long timestamp = System.currentTimeMillis();
         long sumSquaredError = 0;
-        BufferedImage targetImage = parameters.getTargetImage();
-        BufferedImage individualImage = individual.getImage(parameters, 1);
+        BufferedImage targetImage = parameters.getScaledTargetImage();
+        BufferedImage individualImage = individual.getScaledImage(parameters);
         for (int i=0; i< targetImage.getWidth(); i++) {
             for (int j = 0; j < targetImage.getHeight(); j++) {
                 Color targetColor = new Color(targetImage.getRGB(i, j));
@@ -50,6 +51,7 @@ public class FitnessCalculator {
             }
         }
 //        return 1 - ((double)sumSquaredError / parameters.getMaxSumSquaredError());
+//        System.out.println("fitness took : " + (System.currentTimeMillis() - timestamp));
         return sumSquaredError;
     }
 
@@ -67,8 +69,8 @@ public class FitnessCalculator {
 //        return scaledImage;
 
 
-        int newWidth = new Double(initialImage.getWidth() / ratio).intValue();
-        int newHeight = new Double(initialImage.getHeight() / ratio).intValue();
+        int newWidth = new Double(initialImage.getWidth() * ratio).intValue();
+        int newHeight = new Double(initialImage.getHeight() * ratio).intValue();
         BufferedImage resized = new BufferedImage(newWidth, newHeight, initialImage.getType());
         Graphics2D g = resized.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
