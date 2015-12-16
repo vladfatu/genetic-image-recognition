@@ -47,11 +47,11 @@ public class Gene implements MutateableEntity{
             int y = points.get(i).getY();
             boolean changed =false;
             if (random.nextDouble() <= parameters.getMutationRatio()) {
-                x = getNewCoordinate(random, parameters, x, parameters.getTargetImage().getWidth());
+                x = getNewCoordinate(random, parameters, x, parameters.getTargetImage().getWidth()+1);
                 changed = true;
             }
             if (random.nextDouble() <= parameters.getMutationRatio()) {
-                y = getNewCoordinate(random, parameters, x, parameters.getTargetImage().getHeight());
+                y = getNewCoordinate(random, parameters, x, parameters.getTargetImage().getHeight()+1);
                 changed = true;
             }
             if (changed) {

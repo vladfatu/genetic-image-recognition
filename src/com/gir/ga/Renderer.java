@@ -9,20 +9,20 @@ import java.util.List;
  */
 public class Renderer {
 
-    public BufferedImage generateImageFromDna(List<Gene> dna, GAParameters parameters) {
-        BufferedImage image = new BufferedImage(parameters.getTargetImage().getWidth(), parameters.getTargetImage().getHeight(),
+    public BufferedImage generateImageFromDna(List<Gene> dna, GAParameters parameters, int multiplier) {
+        BufferedImage image = new BufferedImage(parameters.getTargetImage().getWidth() * multiplier, parameters.getTargetImage().getHeight() * multiplier,
                 BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = image.createGraphics();
 
-        drawBlackBackground(graphics, parameters);
+        drawBlackBackground(graphics, parameters, multiplier);
 
         for (Gene gene : dna) {
             int[] x = new int[gene.getPoints().size()];
             int[] y = new int[gene.getPoints().size()];
 
             for (int i=0; i<gene.getPoints().size(); i++) {
-                x[i] = gene.getPoints().get(i).getX();
-                y[i] = gene.getPoints().get(i).getY();
+                x[i] = gene.getPoints().get(i).getX() * multiplier;
+                y[i] = gene.getPoints().get(i).getY() * multiplier;
             }
 
             Polygon p = new Polygon(x, y, gene.getPoints().size());
@@ -33,9 +33,9 @@ public class Renderer {
         return image;
     }
 
-    private void drawBlackBackground(Graphics2D graphics, GAParameters parameters) {
+    private void drawBlackBackground(Graphics2D graphics, GAParameters parameters, int multiplier) {
         graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, parameters.getTargetImage().getWidth(), parameters.getTargetImage().getHeight());
+        graphics.fillRect(0, 0, parameters.getTargetImage().getWidth() * multiplier, parameters.getTargetImage().getHeight() * multiplier);
     }
 
 }

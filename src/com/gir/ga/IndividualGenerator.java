@@ -44,7 +44,7 @@ public class IndividualGenerator {
     public Gene generateRandomGene(GAParameters parameters) {
         Random random = new Random();
         Color color = new Color(random.nextInt(256), random.nextInt(256), random.nextInt(256), random.nextInt(256));
-        int geneSize = random.nextInt(parameters.getMaxGeneSize()/4);
+        int geneSize = random.nextInt(parameters.getMaxGeneSize()/4 - 2) + 2;
         List<Point> points = new ArrayList<Point>();
         for (int i=0; i<geneSize; i++) {
             points.add(generateRandomPoint(parameters));
@@ -54,8 +54,8 @@ public class IndividualGenerator {
 
     public Point generateRandomPoint(GAParameters parameters) {
         Random random = new Random();
-        int x = random.nextInt(parameters.getTargetImage().getWidth());
-        int y = random.nextInt(parameters.getTargetImage().getHeight());
+        int x = random.nextInt(parameters.getTargetImage().getWidth()+1);
+        int y = random.nextInt(parameters.getTargetImage().getHeight()+1);
         return new Point(x, y);
     }
 

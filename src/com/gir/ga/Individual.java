@@ -23,11 +23,19 @@ public class Individual implements MutateableEntity {
 
     @Override
     public void mutate(GAParameters parameters) {
+        performGeneMutation(parameters);
+        performGeneCountMutation(parameters);
+    }
+
+    private void performGeneMutation(GAParameters parameters) {
+        Random random = new Random();
+//        if (random.nextDouble() <= parameters.getMutationRatio()) {
+//            dna.get(random.nextInt(dna.size())).mutate(parameters);
+//        }
         for (Gene gene : dna) {
             gene.mutate(parameters);
-            changed = true;
         }
-        performGeneCountMutation(parameters);
+        changed = true;
     }
 
     private void performGeneCountMutation(GAParameters parameters) {
@@ -41,10 +49,10 @@ public class Individual implements MutateableEntity {
         }
     }
 
-    public BufferedImage getImage(GAParameters parameters) {
-        if (image == null || changed) {
+    public BufferedImage getImage(GAParameters parameters, int multiplier) {
+        if (image == null || changed || multiplier != 1) {
             Renderer renderer = new Renderer();
-            image = renderer.generateImageFromDna(dna, parameters);
+            image = renderer.generateImageFromDna(dna, parameters, multiplier);
         }
         return image;
     }

@@ -13,6 +13,7 @@ public class GAParameters {
     private boolean elitism;
     private int matchSampleSize;
     private BufferedImage targetImage;
+    private BufferedImage scaledTargetImage;
     private double mutationRatio;
     private double maxMutation;
     private long maxSumSquaredError;
@@ -87,5 +88,13 @@ public class GAParameters {
 
     public void setMaxGeneSize(int maxGeneSize) {
         this.maxGeneSize = maxGeneSize;
+    }
+
+    public BufferedImage getScaledTargetImage() {
+        return scaledTargetImage;
+    }
+
+    public void setScaledTargetImage(BufferedImage scaledTargetImage) {
+        this.scaledTargetImage = scaledTargetImage;
     }
 }

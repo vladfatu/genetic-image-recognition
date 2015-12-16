@@ -37,8 +37,8 @@ public class FitnessCalculator {
 
     public long getFitness(Individual individual, GAParameters parameters) {
         long sumSquaredError = 0;
-        BufferedImage targetImage = getScaledImage(parameters.getTargetImage(), 10);
-        BufferedImage individualImage = getScaledImage(individual.getImage(parameters), 10);
+        BufferedImage targetImage = parameters.getTargetImage();
+        BufferedImage individualImage = individual.getImage(parameters, 1);
         for (int i=0; i< targetImage.getWidth(); i++) {
             for (int j = 0; j < targetImage.getHeight(); j++) {
                 Color targetColor = new Color(targetImage.getRGB(i, j));
@@ -58,7 +58,7 @@ public class FitnessCalculator {
         return maxDifferencePerPixel * image.getHeight() * image.getWidth();
     }
 
-    private static BufferedImage getScaledImage(BufferedImage initialImage, int ratio) {
+    public BufferedImage getScaledImage(BufferedImage initialImage, double ratio) {
 //        int width = initialImage.getWidth() / ratio;
 //        int height = initialImage.getHeight() / ratio;
 //        Image tmp = initialImage.getScaledInstance(width, height, BufferedImage.SCALE_FAST);

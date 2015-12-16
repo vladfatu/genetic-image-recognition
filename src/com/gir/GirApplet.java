@@ -23,6 +23,8 @@ public class GirApplet extends JApplet {
     public void paint(Graphics g) {
         super.paint(g);
 
+        long initialTimestamp = System.currentTimeMillis();
+
         GAParameters parameters = new GAParameters();
         parameters.setDnaLength(30);
         parameters.setMaxGeneSize(20);
@@ -35,6 +37,7 @@ public class GirApplet extends JApplet {
 
         FitnessCalculator fitnessCalculator = new FitnessCalculator();
         parameters.setMaxSumSquaredError(fitnessCalculator.getMaxSumSquaredError(parameters.getTargetImage()));
+        parameters.setScaledTargetImage(fitnessCalculator.getScaledImage(parameters.getTargetImage(), 10));
 
         g.drawImage(parameters.getTargetImage(), 0, 0, null);
 
@@ -43,7 +46,7 @@ public class GirApplet extends JApplet {
         Individual fittestIndividual = generation.getFittestIndividual(parameters);
         long fitness = fittestIndividual.getFitness(parameters);
         printGeneration(generation, count, fittestIndividual, fitness, 0);
-        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 5000) {
+        while (generation.getFittestIndividual(parameters).getFitness(parameters) > 0 && count < 1000) {
             long timestamp = System.currentTimeMillis();
             fittestIndividual = generation.getFittestIndividual(parameters);
             System.out.println("intermediate " + (System.currentTimeMillis() - timestamp));
@@ -51,9 +54,13 @@ public class GirApplet extends JApplet {
             generation = new Generation(generation, parameters);
             count++;
             printGeneration(generation, count, fittestIndividual, fitness, System.currentTimeMillis() - timestamp);
-            g.drawImage(fittestIndividual.getImage(parameters), 300, 0, null);
+            g.drawImage(fittestIndividual.getImage(parameters, 1), 300, 0, null);
         }
-
+        g.drawImage(fittestIndividual.getImage(parameters, 10), 300, 0, null);
+        g.drawImage(fitnessCalculator.getScaledImage(fittestIndividual.getImage(parameters, 1), 0.1), 300, 300, null);
+        System.out.println();
+        System.out.println();
+        System.out.println("Final time : " + (System.currentTimeMillis() - initialTimestamp));
     }
 
     private void printGeneration(Generation generation, int count, Individual fittestIndividual, long fitness, long timeSpent) {
@@ -65,7 +72,7 @@ public class GirApplet extends JApplet {
     }
 
     private BufferedImage loadImage() {
-        URL imageURL = this.getClass().getClassLoader().getResource("ml.png");
+        URL imageURL = this.getClass().getClassLoader().getResource("ml_scaled.png");
         BufferedImage image = null;
         try {
             image = ImageIO.read(imageURL);
